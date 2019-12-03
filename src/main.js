@@ -71,5 +71,5 @@ app.post('/subscribe', async (request, response) => {
 })
 
 app.listen(process.env.PORT, () => {
-  console.log('Server started listening on port 4000.')
+  console.log(`Server started listening on port ${process.env.PORT}.`)
 })

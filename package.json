@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "start": "node src/main.js",
-    "dev": "nodemon src/main.js"
+    "dev": "nodemon src/main.js",
+    "setup": "node scripts/setup.js"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
