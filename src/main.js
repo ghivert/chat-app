@@ -28,6 +28,7 @@ app.get('/', (request, response) => {
 })
 
 const subscriptions = []
+const usernames = {}
 
 const findSubscriptionIndex = subscription => {
   return subscriptions.findIndex(
@@ -44,11 +45,31 @@ const sendMessage = message => {
   })
 }
 
+const sendMessageTo = (to, message) => {
+  const subscription = usernames[to]
+  if (subscription) {
+    return webpush.sendNotification(subscription, message)
+  } else {
+    return Promise.reject()
+  }
+}
+
 app.post('/message', async (request, response) => {
   try {
     const { title, message, username } = request.body
     response.status(201).json({})
-    sendMessage(JSON.stringify({ title, message, username }))
+    sendMessage(JSON.stringify({ direct: false, title, message, username }))
+  } catch (error) {
+    console.error(error)
+    response.end()
+  }
+})
+
+app.post('/direct-message', async (request, response) => {
+  try {
+    const { title, message, username, to } = request.body
+    await sendMessageTo(to, JSON.stringify({ direct: true, title, message, username }))
+    response.status(201).json({})
   } catch (error) {
     console.error(error)
     response.end()
@@ -58,12 +79,11 @@ app.post('/message', async (request, response) => {
 app.post('/subscribe', async (request, response) => {
   try {
     const { subscription, username } = request.body
-    response.status(201).json({})
     const index = findSubscriptionIndex(subscription)
-    if (index < 0) {
-      subscriptions.push(subscription)
-    }
-    sendMessage(JSON.stringify({ title: `${username} connected` }))
+    if (index < 0) subscriptions.push(subscription)
+    if (username) usernames[username] = subscription
+    await sendMessage(JSON.stringify({ title: `${username} connected` }))
+    response.status(201).json({})
   } catch (error) {
     console.error(error.stack)
     response.end()
