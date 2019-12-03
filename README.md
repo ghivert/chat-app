@@ -13,7 +13,7 @@ git clone git@github.com:ghivert/chat-app.git
 cd chat-app
 touch .env
 yarn
-yarn webpush generate-vapid-keys
+yarn web-push generate-vapid-keys
 # Entrez les valeurs en tant que VAPID_PUBLIC_KEY & VAPID_PRIVATE_KEY
 echo PORT=4000 >> .env
 yarn start
