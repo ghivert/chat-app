@@ -5,7 +5,7 @@ Le but du projet est de construire une application de chat instantané. L'idée 
 Un serveur basique est fourni. Celui-ci pourra évoluer au fil du temps et des besoins. Celui-ci comporte deux endpoints REST : `/subscribe` ainsi que `/message`.
 
 - `/subscribe` permet de s'abonner aux différents messages entrants en notification push. L'abonnement est fait automatiquement au lancement de l'application.
-- `/message` permet d'envoyer un message à toutes les personnes connectées à l'application, y compris l'émetteur.
+- `/message` permet d'envoyer un message à toutes les personnes connectées à l'application, y compris l'émetteur. La requête est un POST dont le corps est un JSON comprenant trois champs : `{ title: String, message: String, username: String }`.
 
 Une instance tourne en continu sur les serveurs de Heroku. Elle est accessible à l'adresse [`https://cfa-chat-app.herokuapp.com/`](https://cfa-chat-app.herokuapp.com/). Le code se trouve sur [GitHub](https://github.com/ghivert/chat-app). Vous pouvez facilement l'instancier sur votre
 ordinateur. Les informations sont dans le README du dépôt. Pour s'assurer d'y accéder, il faut créer la variable d'environnement `ELM_APP_PROD` dans votre `.env`.
