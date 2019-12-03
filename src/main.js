@@ -22,14 +22,17 @@ app.get('/', (request, response) => {
 
 const subscriptions = new Set()
 
+const sendMessage = message => {
+  subscriptions.forEach(subscription => {
+    webpush.sendNotification(subscription, message)
+  })
+}
+
 app.post('/message', async (request, response) => {
   try {
     const { title, message, username } = request.body
     response.status(201).json({})
-    subscriptions.forEach(subscription => {
-      const payload = JSON.stringify({ title, message, username })
-      webpush.sendNotification(subscription, payload)
-    })
+    sendMessage(JSON.stringify({ title, message, username }))
   } catch (error) {
     console.error(error)
     response.end()
@@ -38,9 +41,10 @@ app.post('/message', async (request, response) => {
 
 app.post('/subscribe', async (request, response) => {
   try {
-    const subscription = request.body
+    const { subscription, username } = request.body
     response.status(201).json({})
     subscriptions.add(subscription)
+    sendMessage(JSON.stringify({ title: `${username} connected` }))
   } catch (error) {
     console.error(error.stack)
     response.end()
