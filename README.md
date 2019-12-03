@@ -2,10 +2,12 @@
 
 Le but du projet est de construire une application de chat instantané. L'idée est de commencer petit pour construire quelque chose de plus en plus intéressant. Dans les grandes lignes, l'idée est de reprendre IRC from scratch et de l'améliorer.
 
-Un serveur basique est fourni. Celui-ci pourra évoluer au fil du temps et des besoins. Celui-ci comporte deux endpoints REST : `/subscribe` ainsi que `/message`.
+Un serveur basique est fourni. Celui-ci pourra évoluer au fil du temps et des besoins. Celui-ci comporte deux endpoints REST : `/subscribe`, `/message` ainsi que `/direct-message`. Celles-ci sont toutes des `POST`.
 
 - `/subscribe` permet de s'abonner aux différents messages entrants en notification push. L'abonnement est fait automatiquement au lancement de l'application.
-- `/message` permet d'envoyer un message à toutes les personnes connectées à l'application, y compris l'émetteur. La requête est un POST dont le corps est un JSON comprenant trois champs : `{ title: String, message: String, username: String }`.
+- `/message` permet d'envoyer un message à toutes les personnes connectées à l'application, y compris l'émetteur. Body : `{ title: String, message: String, username: String }`. La réponse est de type `{ direct: false, title: String, message: String, username: String }`.
+- `/direct-message` permet d'envoyer un message uniquement à une seule personne si celle-ci est connectée. Body : `{ title: String, message: String, username: String }`. La réponse est de type `{ direct: true, title: String, message: String, username: String }`.
+
 
 Une instance tourne en continu sur les serveurs de Heroku. Elle est accessible à l'adresse [`https://cfa-chat-app.herokuapp.com/`](https://cfa-chat-app.herokuapp.com/). Le code se trouve sur [GitHub](https://github.com/ghivert/chat-app). Vous pouvez facilement l'instancier sur votre
 ordinateur. Les informations sont dans le README du dépôt. Pour s'assurer d'y accéder, il faut créer la variable d'environnement `ELM_APP_PROD` dans votre `.env`.
