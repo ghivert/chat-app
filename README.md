@@ -14,3 +14,11 @@ yarn
 yarn setup
 yarn start
 ```
+
+# Scripts
+
+```bash
+yarn setup
+```
+
+Cette commande peuple le `.env` à la racine du projet. Elle génère deux clés vapid et mets le port à 4000.
