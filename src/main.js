@@ -23,8 +23,13 @@ app.get('/', (request, response) => {
 const subscriptions = new Set()
 
 const sendMessage = message => {
-  subscriptions.forEach(subscription => {
-    webpush.sendNotification(subscription, message)
+  subscriptions.forEach(async subscription => {
+    try {
+      webpush.sendNotification(subscription, message)
+    } catch (error) {
+      console.error(error)
+      subscriptions.delete(subscription)
+    }
   })
 }
 
