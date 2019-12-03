@@ -9,12 +9,8 @@ Ce serveur permet de faire tourner l'application [Chat App](https://github.com/g
 Cette suite de commande n'a été vérifié que sous Unix ! (Ou sous [MinGW](http://www.mingw.org/) ou [Cygwin](https://www.cygwin.com/) ou [WSL](https://docs.microsoft.com/fr-fr/windows/wsl/install-win10).)
 
 ```bash
-git clone git@github.com:ghivert/chat-app.git
-cd chat-app
-touch .env
+# Cloner le dossier puis se déplacer dedans.
 yarn
-yarn web-push generate-vapid-keys
-# Entrez les valeurs en tant que VAPID_PUBLIC_KEY & VAPID_PRIVATE_KEY
-echo PORT=4000 >> .env
+yarn setup
 yarn start
 ```
