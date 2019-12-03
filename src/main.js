@@ -5,6 +5,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const morgan = require('morgan')
+const hbs = require('express-handlebars')
 
 webpush.setVapidDetails(
   'mailto:example@example.com',
@@ -14,6 +15,8 @@ webpush.setVapidDetails(
 
 const app = express()
 
+app.engine('handlebars', hbs())
+app.set('view engine', 'handlebars')
 app.use(bodyParser.json())
 app.use(cors())
 app.use(morgan('dev', { immediate: true }))
@@ -24,7 +27,7 @@ app.use((request, response, next) => {
 app.use(morgan('dev'))
 
 app.get('/', (request, response) => {
-  response.send('Hello World!')
+  response.render('home')
 })
 
 const subscriptions = []
@@ -68,7 +71,10 @@ app.post('/message', async (request, response) => {
 app.post('/direct-message', async (request, response) => {
   try {
     const { title, message, username, to } = request.body
-    await sendMessageTo(to, JSON.stringify({ direct: true, title, message, username }))
+    await sendMessageTo(
+      to,
+      JSON.stringify({ direct: true, title, message, username })
+    )
     response.status(201).json({})
   } catch (error) {
     console.error(error)

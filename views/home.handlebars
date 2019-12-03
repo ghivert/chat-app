@@ -1,0 +1,34 @@
+<section class="section">
+  <div class="container">
+    <h1 class="title">
+      Chat App
+    </h1>
+    <p class="subtitle">
+      Educational elm project through a complete chat app!
+    </p>
+    <div class="box" style="background: var(--grey); color: var(--text-grey);">
+      Le but du projet est de construire une application de chat instantané. L'idée est de commencer petit pour construire quelque chose de plus en plus intéressant. Dans les grandes lignes, l'idée est de reprendre IRC from scratch et de l'améliorer.
+    </div>
+    <div class="content">
+      <p>
+        Un serveur basique est fourni. Celui-ci pourra évoluer au fil du temps et des besoins. Celui-ci comporte trois endpoints REST : <strong>/subscribe</strong>, <strong>/message</strong> ainsi que <strong>/direct-message</strong>. Celles-ci sont toutes des <strong>POST</strong>.
+      </p>
+      <ul>
+        <li><strong>/subscribe</strong> permet de s'abonner aux différents messages entrants en notification push. L'abonnement est fait automatiquement au lancement de l'application.</li>
+        <li><strong>/message</strong> permet d'envoyer un message à toutes les personnes connectées à l'application, y compris l'émetteur. Body : <strong>{ title: String, message: String, username: String }</strong>. La réponse est de type <strong>{ direct: false, title: String, message: String, username: String }</strong>.</li>
+        <li><strong>/direct-message</strong> permet d'envoyer un message uniquement à une seule personne si celle-ci est connectée. Body : <strong>{ title: String, message: String, username: String }</strong>. La réponse est de type <strong>{ direct: true, title: String, message: String, username: String }</strong>.</li>
+      </ul>
+      <p>
+        Une instance tourne en continu sur les serveurs de Heroku. Elle est accessible à l'adresse <a href="https://cfa-chat-app.herokuapp.com/">https://cfa-chat-app.herokuapp.com/</a>. Le code se trouve sur <a href="https://github.com/ghivert/chat-app">GitHub</a>.
+        <br>
+        Vous pouvez facilement l'instancier sur votre ordinateur. Les informations sont dans le <a href="https://github.com/ghivert/chat-app/blob/master/README.md">README</a> du dépôt. Pour s'assurer d'y accéder, il faut créer la variable d'environnement <strong>ELM_APP_PROD</strong> dans votre <strong>.env</strong>.
+      </p>
+      <p>
+        Le serveur accepte tous les CORS. Vous n'aurez pas de problème pour vous y connecter. Le front tourne pour sa part à l'aide de Webpack. Il suffit de cloner le dépôt, d'installer les dépendances avec Yarn, et d'exécuter un yarn start pour lancer le dev serveur. Un peu de configuration est nécessaire en plaçant un <strong>.env</strong> à la racine du projet. Celui-ci devra contenir une variable <strong>ELM_APP_VAPID_PUBLIC_KEY</strong>. La valeur sur le serveur est <strong>BCGVfnh3sQqAB6tep5s1PNzSI1pKYnv4jRw37obTLn9ot0BNANFVf-q6TdKyJ_SIy7T__5uHXKxGQMekImLOUCs</strong>. Dans le cas où vous faites tourner le serveur sur votre ordinateur, générer deux clés comme indiqué dans le README puis indiquer la clé publique.
+      </p>
+      <p>
+        Tout le code peut être modifié, serveur compris.
+      </p>
+    </div>
+  </div>
+</section>
