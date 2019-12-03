@@ -20,16 +20,11 @@ app.get('/', (request, response) => {
   response.send('Hello World!')
 })
 
-const subscriptions = new Set()
+const subscriptions = []
 
 const sendMessage = message => {
-  subscriptions.forEach(async subscription => {
-    try {
-      webpush.sendNotification(subscription, message)
-    } catch (error) {
-      console.error(error)
-      subscriptions.delete(subscription)
-    }
+  subscriptions.forEach(subscription => {
+    webpush.sendNotification(JSON.parse(subscription), message)
   })
 }
 
@@ -47,8 +42,13 @@ app.post('/message', async (request, response) => {
 app.post('/subscribe', async (request, response) => {
   try {
     const { subscription, username } = request.body
+    console.log(subscription)
     response.status(201).json({})
-    subscriptions.add(subscription)
+    const temp = JSON.stringify(subscription)
+    if (!subscriptions.includes(temp)) {
+      subscriptions.push(temp)
+    }
+    console.log(subscriptions)
     sendMessage(JSON.stringify({ title: `${username} connected` }))
   } catch (error) {
     console.error(error.stack)
