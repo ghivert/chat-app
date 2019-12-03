@@ -1,8 +1,8 @@
 port module Main exposing (..)
 
 import Browser
-import Html exposing (Html, text, div, h1, img)
-import Html.Attributes exposing (src)
+import Html exposing (Html, text, div, h1, img, section)
+import Html.Attributes exposing (src, class)
 import Json.Decode as Decode
 import Json.Encode as Encode
 import Http
@@ -26,9 +26,11 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-  div []
-    [ img [ src "/logo.svg" ] []
-    , h1 [] [ text "Your Elm App is working!" ]
+  section [ class "section" ]
+    [ div [ class "container" ]
+      [ h1 [ class "title" ]
+        [ text "Your Elm App is working!" ]
+      ]
     ]
 
 subscriptions : Model -> Sub Msg
