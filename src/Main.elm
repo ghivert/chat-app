@@ -8,6 +8,7 @@ import Json.Encode as Encode
 import Http
 
 port receivedMessage : (Decode.Value -> msg) -> Sub msg
+port sendUsername : String -> Cmd msg
 
 type alias Model = {}
 
