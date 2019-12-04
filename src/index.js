@@ -13,6 +13,11 @@ const main = async username => {
   })
 }
 
-app.ports.sendUsername.subscribe(username => {
-  main(username)
-})
+try {
+  app.ports.sendUsername.subscribe(username => {
+    main(username)
+  })
+} catch (error) {
+  console.error(error)
+  main()
+}
