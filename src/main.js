@@ -57,6 +57,15 @@ const sendMessageTo = (to, message) => {
   }
 }
 
+app.post('/usernames', async (request, response) => {
+  try {
+    response.status(201).json(Object.keys(usernames))
+  } catch (error) {
+    console.error(error)
+    response.end()
+  }
+})
+
 app.post('/message', async (request, response) => {
   try {
     const { title, message, username } = request.body
