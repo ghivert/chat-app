@@ -23,6 +23,9 @@ const selectBackend = () => {
   }
 }
 
+const prodAPIKey =
+  'BCGVfnh3sQqAB6tep5s1PNzSI1pKYnv4jRw37obTLn9ot0BNANFVf-q6TdKyJ_SIy7T__5uHXKxGQMekImLOUCs'
+
 const run = async username => {
   console.log('Registering service worker')
   const swURL = `${process.env.PUBLIC_URL}/pubsub.js`
@@ -34,7 +37,9 @@ const run = async username => {
   const subscription = await registration.pushManager.subscribe({
     userVisibleOnly: true,
     applicationServerKey: urlBase64ToUint8Array(
-      process.env.ELM_APP_VAPID_PUBLIC_KEY
+      process.env.ELM_APP_PROD
+        ? prodAPIKey
+        : process.env.ELM_APP_VAPID_PUBLIC_KEY
     ),
   })
   console.log('Registered push')
