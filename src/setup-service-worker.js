@@ -45,9 +45,8 @@ const run = async username => {
   console.log('Registered push')
 
   console.log('Registering communication')
-  await navigator.serviceWorker.ready
-  const controller = navigator.serviceWorker.controller
-  controller.postMessage('channel', [messageChannel.port2])
+  const { active } = await navigator.serviceWorker.ready
+  active.postMessage('channel', [messageChannel.port2])
   console.log('Registered communication')
 
   console.log('Sending push')
