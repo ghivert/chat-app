@@ -58,7 +58,7 @@ const sendMessageTo = (to, message) => {
 }
 
 const addTimeout = username => {
-  return setTimeout(() => {
+  return setTimeout(async () => {
     await sendMessage(JSON.stringify({ title: `${username} timeout`}))
     const { subscription } = usernames[username]
     delete usernames[username]
@@ -68,10 +68,13 @@ const addTimeout = username => {
 }
 
 const replaceTimeout = username => {
-  const { timeout, subscription } = usernames[username]
-  clearTimeout(timeout)
-  const newTimeout = addTimeout(username)
-  usernames[username] = { timeout: newTimeout, subscription }
+  const user = usernames[username]
+  if (user) {
+    const { timeout, subscription } = user
+    clearTimeout(timeout)
+    const newTimeout = addTimeout(username)
+    usernames[username] = { timeout: newTimeout, subscription }
+  }
 }
 
 app.post('/usernames', async (request, response) => {
