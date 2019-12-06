@@ -8,7 +8,7 @@ const app = Elm.Main.init({
 
 const main = async username => {
   await serviceWorker.register(username)
-  serviceWorker.subscribe(message => {
+  serviceWorker.subscribe(username, message => {
     app.ports.receivedMessage.send(message)
   })
 }

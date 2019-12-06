@@ -1,3 +1,8 @@
+const messageChannel = new MessageChannel()
+
+let registered = false
+let subscription = null
+
 const urlBase64ToUint8Array = base64String => {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
   const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
@@ -9,9 +14,14 @@ const urlBase64ToUint8Array = base64String => {
   return outputArray
 }
 
-const messageChannel = new MessageChannel()
-
-const subscribe = callback => {
+const subscribe = async (username, callback) => {
+  console.log('Sending push')
+  await fetch([selectBackend(), 'subscribe'].join('/'), {
+    method: 'POST',
+    body: JSON.stringify({ subscription, username }),
+    headers: { 'Content-Type': 'application/json' },
+  })
+  console.log('Sent push')
   messageChannel.port1.onmessage = event => callback(event.data)
 }
 
@@ -34,7 +44,7 @@ const run = async username => {
   console.log('Registered service worker')
 
   console.log('Registering push')
-  const subscription = await registration.pushManager.subscribe({
+  subscription = await registration.pushManager.subscribe({
     userVisibleOnly: true,
     applicationServerKey: urlBase64ToUint8Array(
       process.env.ELM_APP_PROD
@@ -48,23 +58,19 @@ const run = async username => {
   const { active } = await navigator.serviceWorker.ready
   active.postMessage('channel', [messageChannel.port2])
   console.log('Registered communication')
-
-  console.log('Sending push')
-  await fetch([selectBackend(), 'subscribe'].join('/'), {
-    method: 'POST',
-    body: JSON.stringify({ subscription, username }),
-    headers: { 'Content-Type': 'application/json' },
-  })
-  console.log('Sent push')
 }
 
 const register = async username => {
-  if ('serviceWorker' in navigator) {
+  if ('serviceWorker' in navigator && !registered) {
     try {
-      return run(username)
+      await run(username)
+      registered = true
+      return Promise.resolve()
     } catch (error) {
       console.error(error)
     }
+  } else {
+    return Promise.resolve()
   }
 }
 
