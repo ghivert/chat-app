@@ -57,6 +57,23 @@ const sendMessageTo = (to, message) => {
   }
 }
 
+const addTimeout = username => {
+  return setTimeout(() => {
+    await sendMessage(JSON.stringify({ title: `${username} timeout`}))
+    const { subscription } = usernames[username]
+    delete usernames[username]
+    const index = findSubscriptionIndex(subscription)
+    subscriptions.splice(index, 1)
+  }, 300000)
+}
+
+const replaceTimeout = username => {
+  const { timeout, subscription } = usernames[username]
+  clearTimeout(timeout)
+  const newTimeout = addTimeout(username)
+  usernames[username] = { timeout: newTimeout, subscription }
+}
+
 app.post('/usernames', async (request, response) => {
   try {
     response.status(201).json(Object.keys(usernames))
@@ -69,6 +86,7 @@ app.post('/usernames', async (request, response) => {
 app.post('/message', async (request, response) => {
   try {
     const { title, message, username } = request.body
+    replaceTimeout(username)
     response.status(201).json({})
     sendMessage(JSON.stringify({ direct: false, title, message, username }))
   } catch (error) {
@@ -80,6 +98,7 @@ app.post('/message', async (request, response) => {
 app.post('/direct-message', async (request, response) => {
   try {
     const { title, message, username, to } = request.body
+    replaceTimeout(username)
     await sendMessageTo(
       to,
       JSON.stringify({ direct: true, title, message, username })
@@ -96,8 +115,11 @@ app.post('/subscribe', async (request, response) => {
     const { subscription, username } = request.body
     const index = findSubscriptionIndex(subscription)
     if (index < 0) subscriptions.push(subscription)
-    if (username) usernames[username] = subscription
-    await sendMessage(JSON.stringify({ title: `${username} connected` }))
+    if (username) {
+      const timeout = addTimeout(username)
+      usernames[username] = { timeout, subscription }
+      await sendMessage(JSON.stringify({ title: `${username} connected` }))
+    }
     response.status(201).json({})
   } catch (error) {
     console.error(error.stack)
