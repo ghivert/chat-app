@@ -59,7 +59,7 @@ const sendMessageTo = (to, message) => {
 
 const addTimeout = username => {
   return setTimeout(async () => {
-    await sendMessage(JSON.stringify({ title: `${username} timeout`}))
+    await sendMessage(JSON.stringify({ title: `${username} timeout` }))
     const { subscription } = usernames[username]
     delete usernames[username]
     const index = findSubscriptionIndex(subscription)
@@ -119,6 +119,10 @@ app.post('/subscribe', async (request, response) => {
     const index = findSubscriptionIndex(subscription)
     if (index < 0) subscriptions.push(subscription)
     if (username) {
+      const user = usernames[username]
+      if (user) {
+        clearTimeout(user.timeout)
+      }
       const timeout = addTimeout(username)
       usernames[username] = { timeout, subscription }
       await sendMessage(JSON.stringify({ title: `${username} connected` }))
