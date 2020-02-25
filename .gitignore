@@ -13,4 +13,8 @@ node_modules
 # Desktop Services Store on macOS
 .DS_Store
 
+# Desktop Services Store on Windows
+Thumbs.db
+
+# Environment variables
 .env
